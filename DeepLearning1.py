@@ -4,7 +4,16 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
+
 def create_dataset(w_star, x_range, sample_size, sigma, seed=None):
+    
+    '''
+    The function returns:
+    x - A value sampled from a uniform distribution within a range
+    X - An array of structure [1, x^1, x^2, x^3]
+    y = X * w_star
+    It generates a dataset where the w_star are the weights of a polynomial relation between x and y
+    '''
     random_state = np.random.RandomState(seed)
     x = random_state.uniform(x_range[0], x_range[1],(sample_size)) 
     X = np.zeros((sample_size , w_star.shape[0]))
@@ -17,18 +26,21 @@ def create_dataset(w_star, x_range, sample_size, sigma, seed=None):
         y += random_state.normal(0.0 , sigma , sample_size )
     return X, x, y
 
-x_range = [-3,2]
-w_star = np.array([-8,-4,2,1])
+
+x_range = [-3,2] #Range
+w_star = np.array([-8,-4,2,1]) #Weights
 w_star = w_star.T
-sigma = 0.5
+sigma = 0.5 #To Introduce noise in the dataset
 seed_train = 0
 seed_validation = 1
 sample_size_train = 100
 sample_size_validation = 100
 
+#Creating datasets for training and validation
 X_train, x_plot, y_train = create_dataset(w_star, x_range, sample_size_train, sigma, seed_train)
 X_validate, x_plot1, y_validate = create_dataset(w_star, x_range, sample_size_validation, sigma, seed_validation)
-import matplotlib.pyplot as plt
+
+#Plotting training and validation datasets
 fig, ax = plt.subplots()
 ax.set_xlabel("x", fontsize=16)
 ax.set_ylabel("y", fontsize=16)
@@ -39,6 +51,8 @@ ax.legend(['Training set','Validation set'])
 plt.savefig(f'train_validation_set.png')
 plt.close()
 
+
+#Using torch.nn.linear to preidict w_Star with the training and validation data
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = nn.Linear(4,1)
 model = model.to(DEVICE)
