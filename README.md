@@ -20,4 +20,4 @@ The project includes implementation and exploration of the following ideas relat
     1. Evolution of relation between training and validation losses
     2. Final prediction of coefficients
 
-A report can be found explaining my finds in this repo titled `Report.pdf`
+A report can be found explaining my findings in this repo titled `Report.pdf`
